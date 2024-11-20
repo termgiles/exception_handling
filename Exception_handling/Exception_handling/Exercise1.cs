@@ -57,9 +57,43 @@ namespace Exception_handling
             
             int[] inputArray = new int[2];
             InputResult output = new InputResult();
-
-            Console.WriteLine("write a first input (divisor)");
-            string numberOne = Console.ReadLine();
+            try
+            {
+                Console.WriteLine("write a first input (divisor)");
+                int numberOne = int.Parse(Console.ReadLine());
+                Console.WriteLine("write a second input");
+                int numberTwo = int.Parse(Console.ReadLine());
+                if (numberOne < 0 || numberTwo < 0)
+                {
+                     output.Sucess = false;
+                    throw new NegativeIntegerInputException();
+                
+                };
+                if (numberTwo == 0)
+                {
+                      output.Sucess = false;
+                    throw new DivideByZeroException();
+                }
+                output.Result[0] = numberOne;
+                output.Result[1] = numberTwo;
+                output.Sucess =  true;
+            }
+             catch (FormatException)
+             {
+               output.Message = "invalid inputs, please try some more";
+               output.Sucess = false;
+            }
+              catch (DivideByZeroException)
+               {
+                    output.Message = "invalid inputs, can't divide by zero, please try some more";
+                    output.Sucess = false;
+               }
+                catch (NegativeIntegerInputException ex )
+                   { 
+                   output.Message = ex.Message;
+                   output.Sucess = false;
+            }
+            /*
             if (!int.TryParse(numberOne, out inputArray[0]))
             {
                 output.Message = "Attempted to assign an invalid number";
@@ -97,7 +131,8 @@ namespace Exception_handling
             };
 
             if (output.Message.Length > 1) output.Result = null;
-
+            */
+          
             return output;
         }
     }
