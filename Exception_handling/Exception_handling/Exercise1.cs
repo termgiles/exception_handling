@@ -17,37 +17,87 @@ namespace Exception_handling
             bool success = false;
             while (!success)
             {
-                try
-                {
-                    int[] inputs = GetUserInputs();
-                    int answer = Divide(inputs[0], inputs[1]);
-                    Console.WriteLine("Result: " + answer);
-                    success = true;
+                InputResult userInputData = GetUserInputs();
 
-                }
-                catch (FormatException)
+                if (!userInputData.Sucess)
                 {
-                    Console.WriteLine("invalid inputs, please try some more");
+                    Console.WriteLine(userInputData.Message);
                 }
-                catch (DivideByZeroException)
+                if (userInputData.Sucess)
                 {
-                    Console.WriteLine("invalid inputs, can't divide by zero, please try some more");
+                    success = true;
+                    int answer = Divide(userInputData.Result[0], userInputData.Result[1]);
+                    Console.WriteLine("Result: " + answer);
                 }
-                catch (NegativeIntegerInputException ex ) 
-                {
-                    Console.WriteLine(ex.Message);
-                }
+
+                //try
+                //{
+                //    int[] inputs = GetUserInputs();
+                //    int answer = Divide(inputs[0], inputs[1]);
+                //    Console.WriteLine("Result: " + answer);
+                //    success = true;
+
+                //}
+                //catch (FormatException)
+                //{
+                //    Console.WriteLine("invalid inputs, please try some more");
+                //}
+                //catch (DivideByZeroException)
+                //{
+                //    Console.WriteLine("invalid inputs, can't divide by zero, please try some more");
+                //}
+                //catch (NegativeIntegerInputException ex ) 
+                //{
+                //    Console.WriteLine(ex.Message);
+                //}
             }
         }
-        private static int[] GetUserInputs()
+        private static InputResult GetUserInputs()
         {
-            int[] output = new int[2];
+            
+            int[] inputArray = new int[2];
+            InputResult output = new InputResult();
+
             Console.WriteLine("write a first input (divisor)");
-           output[0] = int.Parse(Console.ReadLine());
-           if (output[0] < 0) throw new NegativeIntegerInputException();
+            string numberOne = Console.ReadLine();
+            if (!int.TryParse(numberOne, out inputArray[0]))
+            {
+                output.Message = "Attempted to assign an invalid number";
+                output.Sucess = false;;
+            }
+            else
+            {
+                output.Sucess = true;
+                output.Result[0] = int.Parse(numberOne);
+            }
+
+
             Console.WriteLine("write a second input (dividend)");
-            output[1] = int.Parse(Console.ReadLine());
-           if (output[1] < 0) throw new NegativeIntegerInputException();
+            string numberTwo = Console.ReadLine();
+            if (!int.TryParse(numberTwo, out inputArray[1]))
+            {
+                output.Message = "Attempted to assign an invalid number";
+                output.Sucess = false;
+            }
+            else
+            {
+                output.Sucess = true;
+                output.Result[1] = int.Parse(numberTwo);
+            }
+
+            if (output.Result[0] < 0 || output.Result[1] < 0)
+            {
+                output.Message += " Entered negative inuts";
+                output.Sucess = false;
+            };
+            if (output.Result[1] == 0)
+            {
+                output.Message += " Attempted to divide by zero";
+                output.Sucess = false;
+            };
+
+            if (output.Message.Length > 1) output.Result = null;
+
             return output;
         }
     }
