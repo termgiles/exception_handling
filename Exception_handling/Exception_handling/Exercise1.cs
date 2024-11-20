@@ -33,15 +33,21 @@ namespace Exception_handling
                 {
                     Console.WriteLine("invalid inputs, can't divide by zero, please try some more");
                 }
+                catch (NegativeIntegerInputException ex ) 
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
         private static int[] GetUserInputs()
         {
             int[] output = new int[2];
             Console.WriteLine("write a first input (divisor)");
-            output[0] = int.Parse(Console.ReadLine());
+           output[0] = int.Parse(Console.ReadLine());
+           if (output[0] < 0) throw new NegativeIntegerInputException();
             Console.WriteLine("write a second input (dividend)");
             output[1] = int.Parse(Console.ReadLine());
+           if (output[1] < 0) throw new NegativeIntegerInputException();
             return output;
         }
     }
